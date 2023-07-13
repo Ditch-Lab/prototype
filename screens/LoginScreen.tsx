@@ -9,41 +9,21 @@ import { useAtom } from 'jotai'
 
 const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [value, setValue] = React.useState({
-    email: '',
-    // password: '',
+    phoneNumber: '',
     error: ''
   })
   const [, setUser] = useAtom(magicUserAtom)
 
-  // async function signUp () {
-  //   if (value.email === '' || value.password === '') {
-  //     setValue({
-  //       ...value,
-  //       error: 'Email and password are mandatory.'
-  //     })
-  //     return
-  //   }
-
-  //   try {
-  //     await createUserWithEmailAndPassword(auth, value.email, value.password)
-  //     navigation.navigate('Sign In')
-  //   } catch (error) {
-  //     setValue({
-  //       ...value,
-  //       error: error.message
-  //     })
-  //   }
-  // }
   const handleLogin = async () => {
-    if (value.email === '') {
+    if (value.phoneNumber === '') {
       setValue({
         ...value,
-        error: 'Email is mandatory.'
+        error: 'Phone is mandatory.'
       })
       return
     }
     try {
-      await magicClient.auth.loginWithEmailOTP({ email: value.email })
+      await magicClient.auth.loginWithSMS({ phoneNumber: value.phoneNumber })
       const isLoggedIn = await magicClient.user.isLoggedIn()
       const userMetadata = await magicClient.user.getInfo()
       setUser({ ...userMetadata, isLoggedIn })
@@ -63,12 +43,12 @@ const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
       <View style={styles.controls}>
         <Input
-          placeholder='Email'
+          placeholder='Phone'
           containerStyle={styles.control}
-          value={value.email}
-          onChangeText={(text) => { setValue({ ...value, email: text }) }}
+          value={value.phoneNumber}
+          onChangeText={(text) => { setValue({ ...value, phoneNumber: text }) }}
           leftIcon={<Icon
-            name='envelope'
+            name='phone'
             size={16}
           />}
         />
