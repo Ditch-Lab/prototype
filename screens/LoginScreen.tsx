@@ -2,28 +2,46 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Input, Button } from 'react-native-elements'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { type StackScreenProps } from '@react-navigation/stack'
+import { magicClient } from '../config/magicLink'
 
-const auth = getAuth()
-
-const SignInScreen = () => {
+const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [value, setValue] = React.useState({
     email: '',
-    password: '',
+    // password: '',
     error: ''
   })
 
-  async function signIn () {
-    if (value.email === '' || value.password === '') {
+  // async function signUp () {
+  //   if (value.email === '' || value.password === '') {
+  //     setValue({
+  //       ...value,
+  //       error: 'Email and password are mandatory.'
+  //     })
+  //     return
+  //   }
+
+  //   try {
+  //     await createUserWithEmailAndPassword(auth, value.email, value.password)
+  //     navigation.navigate('Sign In')
+  //   } catch (error) {
+  //     setValue({
+  //       ...value,
+  //       error: error.message
+  //     })
+  //   }
+  // }
+  const handleLogin = async () => {
+    if (value.email === '') {
       setValue({
         ...value,
-        error: 'Email and password are mandatory.'
+        error: 'Email is mandatory.'
       })
       return
     }
-
     try {
-      await signInWithEmailAndPassword(auth, value.email, value.password)
+      await magicClient.auth.loginWithEmailOTP({ email: value.email })
+      navigation.navigate('Sign In')
     } catch (error) {
       setValue({
         ...value,
@@ -34,7 +52,7 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Signin screen!</Text>
+      <Text>Login screen!</Text>
 
       {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
 
@@ -50,19 +68,7 @@ const SignInScreen = () => {
           />}
         />
 
-        <Input
-          placeholder='Password'
-          containerStyle={styles.control}
-          value={value.password}
-          onChangeText={(text) => { setValue({ ...value, password: text }) }}
-          secureTextEntry={true}
-          leftIcon={<Icon
-            name='key'
-            size={16}
-          />}
-        />
-
-        <Button title="Sign in" buttonStyle={styles.control} onPress={signIn} />
+        <Button title="Login" buttonStyle={styles.control} onPress={handleLogin} />
       </View>
     </View>
   )
@@ -94,4 +100,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SignInScreen
+export default LoginScreen
