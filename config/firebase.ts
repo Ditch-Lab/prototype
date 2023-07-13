@@ -12,7 +12,7 @@ import 'firebase/auth'
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: FIREBASE_KEY,
+  apiKey: FIREBASE_KEY || '',
   authDomain: 'ditch-prototype.firebaseapp.com',
   databaseURL: 'https://ditch-prototype.firebaseio.com',
   projectId: 'ditch-prototype',
