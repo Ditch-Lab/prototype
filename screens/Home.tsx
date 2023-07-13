@@ -1,19 +1,22 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { useAuthentication } from '../utils/hooks/useAuthentication'
 import { Button } from 'react-native-elements'
-import { getAuth, signOut } from 'firebase/auth'
-
-const auth = getAuth()
+import { magicClient } from '../config/magicLink'
+import { magicUserAtom } from '../utils/hooks/useMagicUser'
+import { useAtom } from 'jotai'
 
 export default function HomeScreen () {
-  const { user } = useAuthentication()
-
+  const [user, setUser] = useAtom(magicUserAtom)
+  async function handleLogout () {
+    await magicClient.user.logout()
+    setUser(undefined)
+  }
   return (
     <View style={styles.container}>
       <Text>Welcome {user?.email}!</Text>
+      <Text>Wallet Address:{'\n'} {user?.publicAddress}</Text>
 
-      <Button title="Sign Out" style={styles.button} onPress={async () => { await signOut(auth) }} />
+      <Button title="Sign Out" style={styles.button} onPress={handleLogout} />
     </View>
   )
 }

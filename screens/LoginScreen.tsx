@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Input, Button } from 'react-native-elements'
 import { type StackScreenProps } from '@react-navigation/stack'
 import { magicClient } from '../config/magicLink'
+import { magicUserAtom } from '../utils/hooks/useMagicUser'
+import { useAtom } from 'jotai'
 
 const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [value, setValue] = React.useState({
@@ -11,6 +13,7 @@ const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
     // password: '',
     error: ''
   })
+  const [, setUser] = useAtom(magicUserAtom)
 
   // async function signUp () {
   //   if (value.email === '' || value.password === '') {
@@ -41,7 +44,9 @@ const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
     }
     try {
       await magicClient.auth.loginWithEmailOTP({ email: value.email })
-      navigation.navigate('Sign In')
+      const isLoggedIn = await magicClient.user.isLoggedIn()
+      const userMetadata = await magicClient.user.getInfo()
+      setUser({ ...userMetadata, isLoggedIn })
     } catch (error) {
       setValue({
         ...value,
