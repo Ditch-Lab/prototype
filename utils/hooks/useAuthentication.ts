@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, type User } from 'firebase/auth'
 
 const auth = getAuth()
-
+// TODO: Deprecate this hook if we want to continue using magic link for the demo
 export function useAuthentication () {
   const [user, setUser] = useState<User>()
 

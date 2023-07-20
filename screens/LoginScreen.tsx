@@ -23,7 +23,8 @@ const LoginScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
       return
     }
     try {
-      await magicClient.auth.loginWithSMS({ phoneNumber: value.phoneNumber })
+      const withCountryCode = value.phoneNumber.startsWith('+') ? value.phoneNumber : `+1${value.phoneNumber}`
+      await magicClient.auth.loginWithSMS({ phoneNumber: withCountryCode })
       const isLoggedIn = await magicClient.user.isLoggedIn()
       const userMetadata = await magicClient.user.getInfo()
       setUser({ ...userMetadata, isLoggedIn })
