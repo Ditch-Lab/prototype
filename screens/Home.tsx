@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import { magicClient } from '../config/magicLink'
@@ -14,11 +14,15 @@ export default function HomeScreen () {
     await magicClient.user.logout()
     setUser(undefined)
   }
-  async function getChainId () {
-    const chainId = await RPC.getChainId()
-    const stringChainId = JSON.stringify(chainId)
-    setChainId(stringChainId)
-  }
+  useEffect(() => {
+    async function getChainId () {
+      const chainId = await RPC.getChainId()
+      const stringChainId = JSON.stringify(chainId)
+      setChainId(stringChainId)
+    }
+    getChainId().catch(console.error)
+  }, [])
+
   return (
     <View style={styles.container}>
       <Text>Welcome {user?.email}!</Text>
@@ -26,7 +30,6 @@ export default function HomeScreen () {
       <Text>Chain Id:{'\n'} {chainId}</Text>
 
       <Button title="Sign Out" style={styles.button} onPress={handleLogout} />
-      <Button title="Get Chain Id" style={styles.button} onPress={getChainId} />
     </View>
   )
 }
