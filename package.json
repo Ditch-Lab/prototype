@@ -10,10 +10,13 @@
     "lint": "eslint --fix --ext .ts,.tsx ./src"
   },
   "dependencies": {
+    "@ethersproject/shims": "^5.7.0",
     "@expo/metro-config": "^0.10.6",
     "@magic-sdk/react-native-expo": "^19.4.1",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
+    "buffer": "^6.0.3",
+    "ethers": "^4",
     "expo": "~48.0.18",
     "expo-status-bar": "~1.4.4",
     "firebase": "^10.0.0",
