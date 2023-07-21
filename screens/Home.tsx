@@ -9,25 +9,25 @@ import RPC from '../config/ethers' // for using ethers.js
 
 export default function HomeScreen () {
   const [user, setUser] = useAtom(magicUserAtom)
-  const [chainId, setChainId] = React.useState('')
   async function handleLogout () {
     await magicClient.user.logout()
     setUser(undefined)
   }
   useEffect(() => {
-    async function getChainId () {
-      const chainId = await RPC.getChainId()
-      const stringChainId = JSON.stringify(chainId)
-      setChainId(stringChainId)
+    async function getUserAddrAndBalance () {
+      if (user?.publicAddress) {
+        const balance = await RPC.getBalance(user?.publicAddress)
+        setUser({ ...user, balance })
+      }
     }
-    getChainId().catch(console.error)
+    getUserAddrAndBalance().catch(console.error)
   }, [])
 
   return (
     <View style={styles.container}>
-      <Text>Welcome {user?.email}!</Text>
-      <Text>Wallet Address:{'\n'} {user?.publicAddress}</Text>
-      <Text>Chain Id:{'\n'} {chainId}</Text>
+      <Text>Welcome {user?.phoneNumber}!</Text>
+      {user?.publicAddress && <Text>Wallet Address: {user?.publicAddress}</Text>}
+      {user?.balance && <Text>Balance: {user?.balance}</Text>}
 
       <Button title="Sign Out" style={styles.button} onPress={handleLogout} />
     </View>

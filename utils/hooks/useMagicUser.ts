@@ -5,6 +5,7 @@ import { atomWithStorage } from 'jotai/utils'
 
 type MagicUser = MagicUserMetadata & {
   isLoggedIn: boolean
+  balance?: string
 }
 
 export const magicUserAtom = atomWithStorage<MagicUser | undefined>('magicUser', undefined)
